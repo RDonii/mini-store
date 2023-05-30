@@ -16,4 +16,9 @@ class Config:
                                  port=DB_PORT,
                                  db_name=DB_NAME)
 
+    SECRET_KEY = os.getenv("SECRET_KEY")
+
+    # 60 minutes * 24 hours * 8 days = 8 days
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+
 config = Config()
