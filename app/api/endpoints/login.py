@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -12,6 +12,28 @@ from app.core.config import config
 
 
 router = APIRouter()
+
+@router.post("/register", response_model=schemas.User)
+def register_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    username: str = Body(...),
+    first_name: str = Body(None),
+    last_name: str = Body(None),
+    password: str = Body(...)
+) -> Any:
+    """
+    Sign up new user.
+    """
+    user = crud.user.get_by_username(db, username=username)
+    if user:
+        raise HTTPException(
+            status_code=400,
+            detail="The user with this username already exists in the system.",
+        )
+    user_in = schemas.UserCreate(username=username, first_name=first_name, last_name=last_name, password=password)
+    user = crud.user.create(db, obj_in=user_in)
+    return user
 
 
 @router.post("/login/jwt", response_model=schemas.Token)
