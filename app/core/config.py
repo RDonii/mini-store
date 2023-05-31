@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 class Config:
     load_dotenv()
     DB_STRING = 'postgresql+psycopg2://{username}:{password}@{host}:{port}/{db_name}'
-    DB_USERNAME = os.getenv('POSTGRES_USER', 'postgres')
-    DB_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'postgres')
-    DB_HOST = os.getenv('POSTGRES_HOST', 'localhost')
-    DB_PORT = os.getenv('POSTGRES_PORT', '8001')
+    DB_USERNAME = os.getenv('DB_USER', 'postgres')
+    DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+    DB_HOST = os.getenv('DB_HOST', 'localhost')
+    DB_PORT = os.getenv('DB_PORT', '8001')
     DB_NAME = os.getenv('DB_NAME', 'postgres')
 
     DB_STRING = DB_STRING.format(username=DB_USERNAME,
