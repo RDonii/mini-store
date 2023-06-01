@@ -18,6 +18,6 @@ class ProductType(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(25), nullable=False)
     measure = Column(Enum(MeasureEnum))
-    category_id = Column(Integer, ForeignKey('category.id'))
+    category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
     category = relationship('Category', back_populates='product_types')
     products = relationship('Product', back_populates='type')
