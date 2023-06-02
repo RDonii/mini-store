@@ -2,17 +2,15 @@ from typing import Any, List
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
-from pydantic.networks import EmailStr
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
-from app.core.config import config
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.User])
+@router.get("", response_model=List[schemas.User])
 def read_users(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -102,3 +100,24 @@ def update_user(
         )
     user = crud.user.update(db, db_obj=user, obj_in=user_in)
     return user
+
+
+# Admin endpoints
+
+@router.delete("/{user_id}", response_model=schemas.User)
+def delete_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    user_id: int,
+    current_user: models.User = Depends(deps.get_current_active_superuser)
+):
+    """
+    Make user inactive
+    """
+    user = crud.user.get(db, id=user_id)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this id does not exist in the system"
+        )
+    return crud.user.remove(db, db_obj=user)
