@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
@@ -21,3 +21,7 @@ class ProductType(Base):
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
     category = relationship('Category', back_populates='product_types')
     products = relationship('Product', back_populates='type')
+
+    __table_args__ = (
+        UniqueConstraint('category_id', 'title', name='category_title'),
+    )
