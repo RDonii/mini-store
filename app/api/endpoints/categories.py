@@ -54,7 +54,7 @@ def read_category(
     Get a specific category
     """
     category = crud.category.get(db, id=category_id)
-    if not category or not crud.user.is_superuser(current_user) and category.owner_id != current_user.id:
+    if not category or (not crud.user.is_superuser(current_user) and category.owner_id != current_user.id):
         raise HTTPException(
             status_code=404,
             detail="The category with this id does not exist in the system"
@@ -74,12 +74,32 @@ def update_category(
     Update a specific category
     """
     category = crud.category.get(db, category_id)
-    if not category or not crud.user.is_superuser(current_user) and category.id == current_user.id:
+    if not category or (not crud.user.is_superuser(current_user) and category.id == current_user.id):
         raise HTTPException(
             status_code=404,
             detail="The category with this title already exists in the system.",
         )
     return crud.category.update(db, db_obj=category, obj_in=category_in)
+
+
+@router.delete('/{category_id}', response_model=schemas.Category)
+def delete_category(
+    *,
+    db: Session = Depends(deps.get_db),
+    category_id: int,
+    current_user: models.User = Depends(deps.get_current_active_user)
+) -> Any:
+    """
+    Delete a specific category
+    """
+    category = crud.category.get(db=db, id=category_id)
+    if not category or (not crud.user.is_superuser(current_user) and category.owner_id != current_user.id):
+        raise HTTPException(
+            status_code=404,
+            detail="The category with this id does not exist in the system",
+        )
+    crud.category.remove(db, id=category_id)    # TODO: prevent deletion if related products exists
+    return category
 
 
 # Admin endpoints
