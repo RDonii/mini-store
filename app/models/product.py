@@ -18,7 +18,7 @@ class Product(Base):
     unit_price = Column(DECIMAL(7, 2), nullable=False)
     currency = Column(Enum(CurrencyEnum))
     amount = Column(Integer, default=0)
-    type_id = Column(Integer, ForeignKey('product_type.id'))
+    type_id = Column(Integer, ForeignKey('product_type.id'), nullable=False)
     type = relationship('ProductType', back_populates='products')
     created = Column(DateTime(timezone=True), server_default=func.now())
     updated = Column(DateTime(timezone=True), onupdate=func.now())
