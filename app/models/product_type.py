@@ -6,10 +6,10 @@ from app.db.base_class import Base
 
 
 class MeasureEnum(enum.Enum):
-    piece = 1
-    pack = 2
-    kg = 3
-    meter = 4
+    piece = "piece"
+    pack = "pack"
+    kg = "kg"
+    meter = "meter"
 
 
 class ProductType(Base):
