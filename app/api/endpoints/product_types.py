@@ -1,5 +1,5 @@
 from typing import Any, List, Annotated, Union
-from fastapi import APIRouter, Depends, Body, Query, HTTPException
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 
 from app.api import deps
@@ -130,7 +130,7 @@ def read_product_types(
 
 
 @router.post('', response_model=schemas.ProductType)
-def create_product_type_me(
+def create_product_type(
     *,
     db: Session = Depends(deps.get_db),
     obj_in: schemas.ProductTypeCreate,
