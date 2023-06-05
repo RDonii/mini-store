@@ -7,8 +7,8 @@ from app.db.base_class import Base
 
 
 class CurrencyEnum(enum.Enum):
-    sum = 1
-    dollar = 2
+    sum = 'UZS'
+    dollar = 'USD'
 
 
 class Product(Base):
