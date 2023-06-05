@@ -52,6 +52,66 @@ def read_product_types_me(
     
     return crud.product_type.get_multi_by_category(db=db, category_id=category_id, limit=limit, skip=skip)
 
+@router.get('/{product_type_id}', response_model=schemas.ProductType)
+def read_product_type(
+    *,
+    db: Session = Depends(deps.get_db),
+    product_type_id: int,
+    current_user: models.User = Depends(deps.get_current_active_user)
+):
+    """
+    Get a specific product-type
+    """
+    pt = crud.product_type.get(db, id=product_type_id)
+    if not pt or (not crud.user.is_superuser(current_user) and pt.category.owner_id != current_user.id):
+        raise HTTPException(
+            status_code=404,
+            detail="The product-type with this id does not exist in the system"
+        )
+
+    return pt
+
+
+@router.put('/{product_type_id}', response_model=schemas.ProductType)
+def update_product_type(
+    *,
+    db: Session = Depends(deps.get_db),
+    product_type_id: int,
+    obj_in: schemas.product_type.ProductTypeUpdate,
+    current_user: models.User = Depends(deps.get_current_active_user),
+):
+    """
+    Update a specific product-type
+    """
+    pt = crud.product_type.get(db, id=product_type_id)
+    if not pt or (crud.user.is_superuser(current_user) and pt.category.owener_id != current_user.id):
+        raise HTTPException(
+            status_code=404,
+            detail="The product-type with this id does not exist in the system"
+        )
+
+    return crud.product_type.update(db, db_obj=pt, obj_in=obj_in)
+
+
+@router.delete('/{product_type_id}', response_model=schemas.ProductType)
+def delete_product_type(
+    *,
+    db: Session = Depends(deps.get_db),
+    product_type_id: int,
+    current_user: models.User = Depends(deps.get_current_active_user),
+):
+    """
+    Delete a specific product-type
+    """
+    pt = crud.product_type.get(db, id=product_type_id)
+    if not pt or (not crud.user.is_superuser(current_user) and pt.category.owner_id != current_user.id):
+        raise HTTPException(
+            status_code=404,
+            detail="The product-type with this id does not exist in the system"
+        )
+
+    return crud.product_type.remove(db, id=product_type_id)
+
 
 # Admin endpoints
 

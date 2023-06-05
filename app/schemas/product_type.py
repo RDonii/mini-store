@@ -7,11 +7,10 @@ from app.models.product_type import MeasureEnum
 class ProductTypeBase(BaseModel):
     title: str
     measure: Optional[MeasureEnum]
-    category_id: int
 
 
 class ProductTypeCreate(ProductTypeBase):
-    pass
+    category_id: int
 
 
 class ProductTypeUpdate(ProductTypeBase):
@@ -20,6 +19,7 @@ class ProductTypeUpdate(ProductTypeBase):
 
 class ProductTypeInDBBase(ProductTypeBase):
     id: Optional[int] = None
+    category_id: int
 
     class Config:
         orm_mode = True
