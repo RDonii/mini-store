@@ -12,8 +12,6 @@ class ProductBase(BaseModel):
     currency: CurrencyEnum
     amount: Optional[int] = 0
     type_id: int
-    # created
-    # updated
 
 
 class ProductCreate(ProductBase):
@@ -27,7 +25,7 @@ class ProductUpdate(ProductBase):
 class ProductInDBBase(ProductBase):
     id: Optional[int] = None
     created: datetime
-    updated: datetime
+    updated: Optional[datetime] = None
 
     class Config:
         orm_mode = True
