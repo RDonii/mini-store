@@ -14,6 +14,9 @@ class CRUDProductType(CRUDBase[ProductType, ProductTypeCreate, ProductTypeUpdate
     
     def get_by_title_category(self, db: Session, *, category_id: int, title: str) -> Union[ProductType, None]:
         return db.query(self.model).filter(self.model.category_id==category_id, self.model.title==title).first()
+    
+    def get_by_owner(self, db: Session, *, id: int, owner_id: int) -> Union[ProductType, None]:
+        return db.query(self.model).filter(ProductType.id==id, self.model.category.has(owner_id=owner_id)).first()
 
 
 product_type = CRUDProductType(ProductType)
