@@ -7,8 +7,8 @@ from app.db.base_class import Base
 
 
 class CurrencyEnum(enum.Enum):
-    sum = 'UZS'
-    dollar = 'USD'
+    UZS = 'UZS'
+    USD = 'USD'
 
 
 class Product(Base):
@@ -16,7 +16,7 @@ class Product(Base):
     model = Column(String, index=True)
     unit_cost = Column(DECIMAL(7, 2), nullable=False)
     unit_price = Column(DECIMAL(7, 2), nullable=False)
-    currency = Column(Enum(CurrencyEnum))
+    currency = Column(Enum(CurrencyEnum), default=CurrencyEnum.UZS)
     amount = Column(Integer, default=0)
     type_id = Column(Integer, ForeignKey('product_type.id'), nullable=False)
     type = relationship('ProductType', back_populates='products')
